@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Websocket Listener</title>
+</head>
+
+<body>
+    <h1>Ransomware hashes</h1>
+    <button id="ltn" onclick="listenToNitification()">Listen to notification</button>
+    <br />
+    <br />
+    <textarea id="hashes" aria-label="hashes" disabled rows="10" cols="150" style="resize: none"
+        placeholder="ransomware hahses list will be displayed here">{{blocked_hashes}}</textarea>
+    <script>
+        var playAudio = false;
+        function listenToNitification() {
+            playAudio = true;
+            document.getElementById("ltn").disabled = true;
+        }
+        // get the port from url
+        const node_port = window.location.href.split(':')[2].split('/')[0];
+        const socket = new WebSocket(`ws://localhost:${node_port}/ws`);
+
+        socket.addEventListener('open', (event) => {
+            console.log('WebSocket connection established');
+        });
+
+        socket.addEventListener('message', (event) => {
+            if (playAudio) {
+                const audio = new Audio('/static/notification.mp3');
+                audio.play();
+            }
+            const jsonData = JSON.parse(event.data);
+            const hashes = document.getElementById('hashes');
+            hashes.value += jsonData.file_hash + '\n';
+            console.log(`Received message: ${event.data}`);
+        });
+
+        socket.addEventListener('close', (event) => {
+            console.log('WebSocket connection closed');
+        });
+    </script>
+</body>
+
+</html>

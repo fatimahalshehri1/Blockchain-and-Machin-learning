@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Ransomware Detection</title>
+</head>
+<body>
+    <h1>Ransomware Detection</h1>
+
+    <form action="/mine_block/" method="post" enctype="multipart/form-data">
+        <input type="file" name="file" required>
+        <button type="submit">Upload</button>
+    </form>
+
+    <h2>Result:</h2>
+    <p>{{ result }}</p>
+</body>
+</html>
